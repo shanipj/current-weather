@@ -4,7 +4,7 @@ import axios from "axios";
 import swal from 'sweetalert';
 
 const api = 'https://api.tomorrow.io/v4/timelines?location=60809ca688a6a60007947ca2&fields=temperature&timesteps=current&units=metric&apikey=HVIwYjZHra24Ah3uihus6Oh5pYRh6fXQ';
-const Interval = 900000;
+const interval = 900000;
 
 class WeatherDashboard extends Component {
     state = {
@@ -18,7 +18,7 @@ class WeatherDashboard extends Component {
     componentDidMount() {
         this.intervalId = setInterval(
           () => this.getData(),
-           Interval);
+           interval);
         this.getData();
     }
 
