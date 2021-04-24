@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import WeatherDashboard from './WeatherDashboard/WeatherDashboard';
 
 function App() {

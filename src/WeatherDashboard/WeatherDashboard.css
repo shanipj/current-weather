@@ -31,7 +31,7 @@ body{
     height: 400px;
     max-width: 300px; 
     max-height: 400px;
-    top: 16%;
+    top: 25%;
     margin: auto;
     background-color: aliceblue;
     opacity: 0.5;
@@ -53,5 +53,8 @@ body{
 }
 .content .message{
     font-size: 40px;
+}
+.swal-modal{
+    vertical-align: top;
 }
 
