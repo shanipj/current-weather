@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import './WeatherDashboard.css';
 import axios from "axios";
 import swal from 'sweetalert';
-
-const api = 'https://api.tomorrow.io/v4/timelines?location=60809ca688a6a60007947ca2&fields=temperature&timesteps=current&units=metric&apikey=HVIwYjZHra24Ah3uihus6Oh5pYRh6fXQ';
-const interval = 900000;
+import * as Constans from '../Utils/constants';
 
 class WeatherDashboard extends Component {
     state = {
@@ -18,7 +16,7 @@ class WeatherDashboard extends Component {
     componentDidMount() {
         this.intervalId = setInterval(
           () => this.getData(),
-           interval);
+          Constans.Interval);
         this.getData();
     }
 
@@ -26,52 +24,53 @@ class WeatherDashboard extends Component {
         clearInterval(this.intervalId);
     }
 
-    getData() {
-            axios.get(api)
-            .then(response => {
-                let temperature = response.data.data.timelines[0].intervals[0].values.temperature;
-                let newTemp = Math.floor(temperature);
+    getData = async () => {
+        try {
+            const response = await axios.get(Constans.API);
+                let newTemp = Math.floor(response.data.data.timelines[0].intervals[0].values.temperature);
                 this.compareTemp(newTemp);
-            }).catch(error => {
-                swal('No Information Available');
-            })
-    }
+        } catch (err) {
+            swal('No Information Available');
+        }
+    };
+    
 
     compareTemp(newTemp) {
-        let message = '';
-        let alertMessage = '';
-        let status = '';
-        let currentStatus = this.state.status;
-    
-        if ( newTemp >= 15 ){
-            message = 'All Clear!';
-            alertMessage = 'All Clear!';
-            status = 'green';  
-        }else if( newTemp <= 5 ){
-            message = 'Danger Cold';
-            alertMessage = 'Stop the work and get inside';
-            status = 'red';
-        }else {
-            message = 'Extreme Cold';
-            alertMessage = 'Keep You Warm (Hot Drinks/Soups)';
-            status = 'orange';  
+        let {status, message, alertMessage} = this.state
+        let newStatus = '';
+        
+        switch (true) {
+            case ( newTemp <= 15 ):
+                message = 'All Clear!';
+                alertMessage= "All Clear!";
+                newStatus = "green";
+                break;
+            case ( newTemp <= 5 ):
+                message = 'Danger Cold';
+                alertMessage = 'Stop the work and get inside';
+                newStatus = 'red';
+                break;
+            case ( newTemp > 5 && newTemp < 15 ):
+                message = 'Extreme Cold';
+                alertMessage = 'Keep You Warm (Hot Drinks/Soups)';
+                newStatus = 'orange';  
+                break;
+            default: 
+                break;
         }
-                    
-        if ( currentStatus !== status ) {
+        if ( status !== newStatus ) {
             swal(alertMessage);
-            this.setState({ currentTemp: newTemp, message: message ,status: status});
         }
+        this.setState({ currentTemp: newTemp, message: message ,status: newStatus});
     }  
 
     render() {
-        const currentStatus = this.state.status;
-        const currentMessage = this.state.message;
-        const currentTemp = this.state.currentTemp;
-
+         const {status, message, currentTemp} = this.state
+  
         return (
             <div className="mainPage"
                 style={{
-                    background: "url('"+process.env.PUBLIC_URL+ "/" + currentStatus + ".jpg')",
+                    background:  `url(/current-weather/${status}.jpg)`
                 }}>
                 <div className="container">
                     <div className="content">
@@ -79,7 +78,7 @@ class WeatherDashboard extends Component {
                         <span className="currentTemp">
                             {currentTemp}°
                         </span>
-                        <p className="message">{currentMessage}</p>
+                        <p className="message">{message}</p>
                     </div>
                 </div>
             </div>
