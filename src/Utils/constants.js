@@ -1,0 +1,2 @@
+export const API = 'https://api.tomorrow.io/v4/timelines?location=6086b0802d517200076909b9&fields=temperature&timesteps=current&units=metric&apikey=HVIwYjZHra24Ah3uihus6Oh5pYRh6fXQ';
+export const Interval = 900000;

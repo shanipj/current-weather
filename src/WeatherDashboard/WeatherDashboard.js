@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import './WeatherDashboard.css';
 import axios from "axios";
 import swal from 'sweetalert';
-import * as Constans from '../Utils/constants';
+import * as Constants from '../Utils/constants';
 
 class WeatherDashboard extends Component {
     state = {
-        currentTemp: "-",
+        currentTemp: '-',
         message: 'Loading...',
         alertMessage: '',
         status: 'loadingColor'
@@ -16,7 +16,7 @@ class WeatherDashboard extends Component {
     componentDidMount() {
         this.intervalId = setInterval(
           () => this.getData(),
-          Constans.Interval);
+          Constants.Interval);
         this.getData();
     }
 
@@ -26,24 +26,23 @@ class WeatherDashboard extends Component {
 
     getData = async () => {
         try {
-            const response = await axios.get(Constans.API);
+            const response = await axios.get(Constants.API);
                 let newTemp = Math.floor(response.data.data.timelines[0].intervals[0].values.temperature);
                 this.compareTemp(newTemp);
         } catch (err) {
             swal('No Information Available');
         }
-    };
+    }
     
-
     compareTemp(newTemp) {
-        let {status, message, alertMessage} = this.state
+        let {status, message, alertMessage} = this.state;
         let newStatus = '';
         
         switch (true) {
             case ( newTemp <= 15 ):
                 message = 'All Clear!';
-                alertMessage= "All Clear!";
-                newStatus = "green";
+                alertMessage= 'All Clear!';
+                newStatus = 'green';
                 break;
             case ( newTemp <= 5 ):
                 message = 'Danger Cold';
@@ -62,23 +61,23 @@ class WeatherDashboard extends Component {
             swal(alertMessage);
         }
         this.setState({ currentTemp: newTemp, message: message ,status: newStatus});
-    }  
+    }
 
     render() {
-         const {status, message, currentTemp} = this.state
+        const {status, message, currentTemp} = this.state;
   
         return (
             <div className="mainPage"
                 style={{
-                    background:  `url(/current-weather/${status}.jpg)`
+                    background: `url(/current-weather/${status}.jpg)`
                 }}>
-                <div className="container">
-                    <div className="content">
-                        <p className="header">The Current Weather in JKF Is:</p>
-                        <span className="currentTemp">
+                <div className = "container">
+                    <div className = "content">
+                        <p className = "header">The Current Weather in JKF Is:</p>
+                        <span className = "currentTemp">
                             {currentTemp}°
                         </span>
-                        <p className="message">{message}</p>
+                        <p className = "message">{message}</p>
                     </div>
                 </div>
             </div>
